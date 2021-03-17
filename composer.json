@@ -1,8 +1,6 @@
 {
-    "name": "simexis/omniship-berry",
-
-    "description": "PHP library to communicate with the berry.",
-
+    "name": "simexis/omniship-acscourier",
+    "description": "PHP library to communicate with the Acscourier.",
     "require": {
         "php": "^7",
         "simexis/omniship": "dev-master"
@@ -12,7 +10,7 @@
 
     "autoload": {
         "psr-4": {
-            "Omniship\\Berry\\": "src"
+            "Omniship\\Acscourier\\": "src"
         }
     },
 
