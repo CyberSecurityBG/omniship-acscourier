@@ -23,7 +23,7 @@ class CreateBillOfLadingResponse extends AbstractResponse
     public function getData()
     {
         if(isset($this->data->ACSOutputResponce->ACSValueOutput[0]->error_message) && !is_null($this->data->ACSOutputResponce->ACSValueOutput[0]->error_message) || isset($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message) && !empty($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message)){
-            return $this->data->ACSOutputResponce->ACSValueOutput;
+            $this->error = $this->data;
         }
         $respons = $this->data->ACSOutputResponce->ACSValueOutput[0];
         $result = new Create();

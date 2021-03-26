@@ -7,25 +7,25 @@ class ShippingQuoteResponse extends AbstractResponse
 {
     public function getData()
     {
-        if(isset($this->data->ACSOutputResponce->ACSValueOutput[0]->error_message) && !is_null($this->data->ACSOutputResponce->ACSValueOutput[0]->error_message) || isset($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message) && !empty($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message)){
-            return $this->data->ACSOutputResponce->ACSValueOutput;
+        if(isset($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message) && !is_null($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message) || isset($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message) && !empty($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message)){
+            $this->error = $this->data;
         }
         $result = new ShippingQuoteBag();
         foreach ($this->data->ACSOutputResponce->ACSValueOutput as $data){
             $result->push([
                 'id' => 1,
-                'name' => null,
+                'name' => 'Shipping to adress',
                 'description' => null,
                 'price' => (float)$data->Total_Ammount+$data->Total_Vat_Ammount,
                 'pickup_date' => null,
                 'pickup_time' => null,
                 'delivery_date' => null,
                 'delivery_time' => null,
-                'currency' => null,
+                'currency' => $this->getRequest()->getCurrency(),
                 'tax' => null,
-                'insurance' => 0,
+                'insurance' => $this->getRequest()->getInsuranceAmount(),
                 'exchange_rate' => null,
-                'payer' =>null,
+                'payer' =>$this->getRequest()->getPayer(),
                 'allowance_fixed_time_delivery' => false,
                 'allowance_cash_on_delivery' => true,
                 'allowance_insurance' => true,

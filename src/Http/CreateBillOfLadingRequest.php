@@ -8,6 +8,8 @@
 
 namespace  Omniship\Acscourier\Http;
 
+use Carbon\Carbon;
+
 class CreateBillOfLadingRequest extends AbstractRequest
 {
     /**
@@ -37,17 +39,17 @@ class CreateBillOfLadingRequest extends AbstractRequest
                 'Pickup_Date' => $this->getOtherParameters('pickup_date'),
                 'Sender' => $this->getSenderAddress()->getFullName(),
                 'Recipient_Name' => $this->getReceiverAddress()->getFullName(),
-                'Recipient_Address' => $this->getReceiverAddress()->getStreet()->getName(),
-                'Recipient_Address_Number' => $this->getReceiverAddress()->getStreetNumber(),
-                'Recipient_Zipcode' => $this->getReceiverAddress()->getPostCode(),
+                'Recipient_Address' => $this->getReceiverAddress()->getStreet() ?  $this->getReceiverAddress()->getStreet()->getName() : null,
+                'Recipient_Address_Number' => $this->getReceiverAddress()->getStreetNumber() ?? null,
+                'Recipient_Zipcode' =>  preg_replace('/\s+/', '', $this->getReceiverAddress()->getPostCode()),
                 'Recipient_Region' => $this->getReceiverAddress()->getState()->getName(),
                 'Recipient_Phone' => $this->getReceiverAddress()->getPhone(),
                 'Recipient_Cell_Phone' => $this->getReceiverAddress()->getPhone(),
                 'Recipient_Floor' => $this->getReceiverAddress()->getFloor() ?? null,
                 'Recipient_Company_Name' => $this->getReceiverAddress()->getCompanyName(),
-                'Recipient_Country' => $this->getReceiverAddress()->getCountry()->getId(),
+                'Recipient_Country' => $this->getReceiverAddress()->getCountry()->getiso2(),
                 'Acs_Station_Destination' => null,
-                'Acs_Station_Branch_Destination' => null,
+                'Acs_Station_Branch_Destination' => $this->getReceiverAddress()->getOffice() ? 1 : 0,
                 'Charge_Type' => $payer,
                 'Cost_Center_Code' => null,
                 'Item_Quantity' => 1,
@@ -55,16 +57,17 @@ class CreateBillOfLadingRequest extends AbstractRequest
                 'Dimension_X_In_Cm' => $this->getItems()->first()->getDepth(),
                 'Dimension_Y_in_Cm' => $this->getItems()->first()->getWidth(),
                 'Dimension_Z_in_Cm' => $this->getItems()->first()->getHeight(),
-                'Cod_Ammount' => $this->getCashOnDeliveryAmount(),
+                'Cod_Ammount' => floatval($this->getCashOnDeliveryAmount()),
                 'Cod_Payment_Way' => 0,
                 'Acs_Delivery_Products' => implode(',', $addon),
-                'Insurance_Ammount' => $this->getInsuranceAmount(),
+                'Insurance_Ammount' => floatval(str_replace('.', ',', $this->getInsuranceAmount())),
                 'Delivery_Notes' => $this->getReceiverAddress()->getNote(),
                 'Appointment_Until_Time' => null,
                 'Recipient_Email' => 'dasdas@abv.bg',
                 'Reference_Key1' => null,
                 'Reference_Key2' => null,
                 'With_Return_Voucher' => 1,
+                'Language' => 'EN'
                 ]
             ];
         return $data;

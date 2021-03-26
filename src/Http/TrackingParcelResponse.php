@@ -1,44 +1,35 @@
 <?php
 
 namespace Omniship\Acscourier\Http;
+use Carbon\Carbon;
 use Omniship\Common\Component;
-use Omniship\Common\EventBag;
+use Omniship\Common\ShippingQuoteBag;
 use Omniship\Common\TrackingBag;
 
-class TrackingParcelResponse extends AbstractResponse
+class ShippingQuoteResponse extends AbstractResponse
 {
     public function getData()
     {
-        $result = new TrackingBag();
-        $DecodeResult = json_decode($this->data, true);
-        if(is_null($DecodeResult['progressdetail'])) {
-            return $result;
+        if(isset($this->data->ACSOutputResponce->ACSValueOutput[0]->error_message) && !is_null($this->data->ACSOutputResponce->ACSValueOutput[0]->error_message) || isset($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message) && !empty($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message)){
+            return $this->data->ACSOutputResponce->ACSValueOutput;
         }
-        $row = 0;
-        foreach($DecodeResult['progressdetail'] as $quote) {
+        $result = new ShippingQuoteBag();
+        foreach ($this->data->ACSOutputResponce->ACSValueOutput as $data){
+            $result = new TrackingBag();
+            $track = $this->_getTrackPicking($track);
+            $name = implode(' ', array_filter([$track->getSiteType(), $track->getSiteName()]));
+            $name = explode('[', !$name && !$row ? $track->getOperationComment() : $name);
+            $name = trim(array_shift($name));
             $result->push([
-                'id' => md5($quote['deliverydate'].$quote['deliverytime']),
-                'name' => $quote['deliverylocation'],
-                'events' => $this->_getEvents($quote),
-                'shipment_date' => null,
-                'estimated_delivery_date' => null,
+                'id' => $track->getOperationCode(),
+                'name' => $name,
+                'events' => $this->_getEvents($track),
+                'shipment_date' => Carbon::createFromFormat('Y-m-d\TH:i:sP', $track->getMoment()),
+                'estimated_delivery_date' => $this->_findEstimatedDeliveryDate($tracking[0]),
                 'origin_service_area' => null,
-                'destination_service_area' => new Component(['id' => md5(json_encode( $quote['deliverylocation'])), 'name' =>  $quote['deliverylocation']]),
+                'destination_service_area' => $name ? new Component(['id' => md5($name), 'name' => $name]) : null,
             ]);
-            $row++;
-        }
-
-        return $result;
-    }
-
-    protected function _getEvents( $data)
-    {
-        $result = new EventBag();
-        if($data['status']) {
-            $result->push(new Component([
-                'id' => $data['status'],
-                'name' => $data['deliverylocation'],
-            ]));
+            $results->put($bol_id, $result);
         }
         return $result;
     }

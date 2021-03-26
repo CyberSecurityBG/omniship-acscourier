@@ -10,14 +10,13 @@ class TrackingParcelRequest extends AbstractRequest
     public function getData()
     {
         return [
-            'ACSAlias' => 'ACS_Trackingsummary',
+            'ACSAlias' => 'ACS_TrackingDetails',
             'ACSInputParameters' => [
                 'Company_ID' => $this->getCompanyId(),
                 'Company_Password' => $this->getCompanyPassword(),
                 'User_ID' => $this->getUsername(),
                 'User_Password' => $this->getPassword(),
                 'Voucher_No' => $this->getBolId(),
-                'Language' => 'EN'
                 ]
             ];
     }

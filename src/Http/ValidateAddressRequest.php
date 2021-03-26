@@ -23,7 +23,7 @@ class ValidateAddressRequest extends AbstractRequest
                 'User_ID' => $this->getUsername(),
                 'User_Password' => $this->getPassword(),
               //  'Language' => 'EN',
-                'Address' => 'Αβραάμ Αντώνιου 9',
+               // 'Address' => 'Αβραάμ Αντώνιου 9',
             ]
         ];
         return $this->createResponse($this->getClient()->SendRequest($res));

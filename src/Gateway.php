@@ -27,7 +27,7 @@ class Gateway extends AbstractGateway
 
     private $name = 'acscourier';
     protected $client;
-    const TRACKING_URL = '';
+    const TRACKING_URL = 'https://track.aftership.com/trackings?courier=acscourier&tracking-numbers=%s';
 
     /**
      * @return stringc
@@ -123,7 +123,7 @@ class Gateway extends AbstractGateway
 
     public function supportsValidateAddress()
     {
-        return true;
+        return false;
     }
     public function validateAddress(Address $address){
         return $this->createRequest(ValidateAddressRequest::class, $this->setAddress($address)->getParameters());
@@ -181,5 +181,10 @@ class Gateway extends AbstractGateway
     public function getPdf($bol_id)
     {
         return $this->createRequest(GetPdfRequest::class, $this->setBolId($bol_id)->getParameters());
+    }
+
+    public function trackingUrl($parcel_id)
+    {
+        return sprintf(static::TRACKING_URL, $parcel_id);
     }
 }

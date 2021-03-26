@@ -46,7 +46,7 @@ class AbstractResponse extends BaseAbstractResponse
      */
     public function getCode()
     {
-       return null;
+        return 422;
     }
 
     /**
