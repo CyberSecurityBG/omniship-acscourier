@@ -38,7 +38,7 @@ class ShippingQuoteRequest extends AbstractRequest
                 'Pickup_Date' => $this->getOtherParameters('pickup_date'),
                 'Acs_Delivery_Products' => $extras,
                 'Charge_Type' => 2,
-                'Delivery_Zone' => '',
+                'Delivery_Zone' => null,
                 'Insurance_Ammount' => $insurance,
                 'Dimension_X_In_Cm' => $this->getItems()->first()->getDepth(),
                 'Dimension_Y_In_Cm' => $this->getItems()->first()->getWidth(),
