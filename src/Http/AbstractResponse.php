@@ -38,6 +38,7 @@ class AbstractResponse extends BaseAbstractResponse
         if(isset($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message)){
             $message = $this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message;
         }
+     //   dd($message);
         return $message;
     }
 
@@ -46,6 +47,9 @@ class AbstractResponse extends BaseAbstractResponse
      */
     public function getCode()
     {
+        if($this->getMessage() != null){
+            return 422;
+        }
         return null;
     }
 
