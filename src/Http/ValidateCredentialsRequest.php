@@ -26,6 +26,7 @@ class ValidateCredentialsRequest extends AbstractRequest
 
     protected function createResponse($data)
     {
+      //  dd($data);
         return $this->response = new ValidateCredentialsResponse($this, $data);
     }
 

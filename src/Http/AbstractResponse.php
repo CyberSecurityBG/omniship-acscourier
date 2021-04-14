@@ -38,7 +38,9 @@ class AbstractResponse extends BaseAbstractResponse
         if(isset($this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message)){
             $message = $this->data->ACSOutputResponce->ACSValueOutput[0]->Error_Message;
         }
-     //   dd($message);
+        if($message == 'Παρουσιάστηκε πρόβλημα με τα στοιχεία της εταιρείας ή του χρήστη. Παρακαλώ δοκιμάστε πάλι.'){
+            return null;
+        }
         return $message;
     }
 

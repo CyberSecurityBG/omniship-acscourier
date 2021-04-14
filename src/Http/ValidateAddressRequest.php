@@ -26,11 +26,13 @@ class ValidateAddressRequest extends AbstractRequest
                // 'Address' => 'Αβραάμ Αντώνιου 9',
             ]
         ];
+        dd($data);
         return $this->createResponse($this->getClient()->SendRequest($res));
     }
 
     protected function createResponse($data)
     {
+        dd($data);
         return $this->response = new ValidateCredentialsResponse($this, $data);
     }
 

@@ -7,6 +7,7 @@ use http\Client\Response;
 use Omniship\Address\City;
 use Omniship\Address\Office;
 use Omniship\Helper\Collection;
+use App\Exceptions\Error;
 
 class Client
 {
