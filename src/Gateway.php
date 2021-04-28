@@ -187,4 +187,5 @@ class Gateway extends AbstractGateway
     {
         return sprintf(static::TRACKING_URL, $parcel_id);
     }
+
 }

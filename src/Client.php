@@ -110,7 +110,12 @@ class Client
         }
     }
 
-    public function PrintVoucher($voucher_id){
+    public function PrintVoucher($voucher_id, $type = null){
+        if($type == 'a6'){
+            $type = 1;
+        } else {
+            $type = 2;
+        }
         $post = $this->SendRequest([
             'ACSAlias' => 'ACS_Print_Voucher',
             'ACSInputParameters' => [
@@ -119,10 +124,48 @@ class Client
                 'User_ID' => $this->username,
                 'User_Password' => $this->password,
                 'Voucher_No' => $voucher_id,
-                'Print_Type' => 2,
+                'Print_Type' => $type,
                 'Start_Position' => 1
             ]
         ]);
         return $post->ACSOutputResponce->ACSValueOutput[0]->ACSObjectOutput;
+    }
+
+    public function GeneratePickup($date){
+        $post = $this->SendRequest([
+            'ACSAlias' => 'ACS_Issue_Pickup_List',
+            'ACSInputParameters' => [
+                'Company_ID' => $this->company_id,
+                'Company_Password' => $this->company_password,
+                'User_ID' => $this->username,
+                'User_Password' => $this->password,
+                'Pickup_Date' => $date,
+                'MyData' => null,
+            ]
+        ]);
+        if($post->ACSOutputResponce->ACSValueOutput[0]->Unprinted_Found > 0){
+            return [
+                'for_print' => $post->ACSOutputResponce->ACSTableOutput->Table_Data,
+                'total' => $post->ACSOutputResponce->ACSValueOutput[0]->Unprinted_Found
+            ];
+        } else {
+            return [
+                'pickuplist_number' => $post->ACSOutputResponce->ACSValueOutput[0]->PickupList_No,
+                'total' => 0
+            ];
+        }
+    }
+
+    public function DeleteWawybill($walbill_number){
+        $this->SendRequest([
+             'ACSAlias' => 'ACS_Print_Voucher',
+             'ACSInputParameters' => [
+                 'Company_ID' => $this->company_id,
+                 'Company_Password' => $this->company_password,
+                 'User_ID' => $this->username,
+                 'User_Password' => $this->password,
+                 'Voucher_No' => $walbill_number,
+             ]
+         ]);
     }
 }
