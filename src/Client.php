@@ -168,4 +168,33 @@ class Client
              ]
          ]);
     }
+
+    public function PrintPickupList($pickup_number, $date){
+        $return = $this->SendRequest([
+            'ACSAlias' => 'ACS_Print_Pickup_List',
+            'ACSInputParameters' => [
+                'Company_ID' => $this->company_id,
+                'Company_Password' => $this->company_password,
+                'User_ID' => $this->username,
+                'User_Password' => $this->password,
+                'PickupList_No' => $pickup_number,
+                'Pickup_Date' => $date
+            ]
+        ]);
+        return $return->ACSOutputResponce->ACSValueOutput[0]->ACSObjectOutput->PDFData;
+    }
+
+    public function GetPickupList($date){
+        $return = $this->SendRequest([
+            'ACSAlias' => 'ACS_Get_Pickup_Lists',
+            'ACSInputParameters' => [
+                'Company_ID' => $this->company_id,
+                'Company_Password' => $this->company_password,
+                'User_ID' => $this->username,
+                'User_Password' => $this->password,
+                'Pickup_Date' => $date
+            ]
+        ]);
+        return $return->ACSOutputResponce->ACSTableOutput->Table_Data;
+    }
 }
