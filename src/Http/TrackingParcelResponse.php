@@ -6,7 +6,7 @@ use Omniship\Common\Component;
 use Omniship\Common\ShippingQuoteBag;
 use Omniship\Common\TrackingBag;
 
-class ShippingQuoteResponse extends AbstractResponse
+class TrackingParcelResponse extends AbstractResponse
 {
     public function getData()
     {
